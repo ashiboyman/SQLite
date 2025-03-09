@@ -26,3 +26,11 @@ export const posts = sqliteTable("post", {
   name: text("name", { length: 256 }),
   createdAt: text("time").default(sql`CURRENT_TIME`),
 });
+export const users = sqliteTable("users",{
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").unique(),
+  password: text("password").notNull(),
+  createdAt: text("created_at").default(sql`CURRENT_TIME`),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIME`),
+  name: text("name"),
+})
