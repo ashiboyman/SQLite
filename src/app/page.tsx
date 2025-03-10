@@ -3,6 +3,7 @@ import type { inferAsyncReturnType } from "@trpc/server";
 import { posts } from "@/server/db/schema";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 
 export default async function Home() {
   const posts = await db.query.posts.findMany();
@@ -12,6 +13,8 @@ export default async function Home() {
 
   return (
     <div className="container flex max-w-2xl flex-col gap-24 px-4 py-16">
+      <h1 className="w-full text-6xl text-center">this is home page</h1>
+      <Link className="p-4 bg-amber-200 rounded-2xl" href="/login">login</Link>
       <div className="flex flex-col text-xl ">
         <h1 className="text-2xl font-bold">Posts</h1>
         {posts.map((post) => (

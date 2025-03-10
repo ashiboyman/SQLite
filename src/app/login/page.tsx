@@ -27,13 +27,29 @@ export default function SignIn() {
     };
 
     return (
-        <div>
-            <h2>Sign In</h2>
+        <div className="w-[100vw] h-[100vh] flex justify-center items-center align-middle">
+            {/* <h2>Sign In</h2> */}
             {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-                <input type="password" placeholder="Password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-                <button type="submit">Sign In</button>
+            <form className="flex flex-col gap-4 p-4 shadow border-2 rounded-2xl" onSubmit={handleSubmit}>
+                <input
+                    className="p-4 rounded-2xl border"
+                    type="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                    }
+                />
+                <input
+                    className="p-4 rounded-2xl border"
+                    type="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                    }
+                />
+                <button className="p-4 rounded-2xl border" type="submit">Sign In</button>
             </form>
         </div>
     );
