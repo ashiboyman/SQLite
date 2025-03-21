@@ -1,12 +1,12 @@
 # To Do
-## -----------------
-- [x]add ui to login and register 
-- [x]handle api response errors and set coockies when signup
-- [x]add password patterns an regex
-- [x]add ui to dashboard
-- [x]add proper error handling and messages
-- []create a proper database schema
-- []research nextAuth
-- [] add profile pictures
-- [] try to conver pages to server components
-- [] add one time passwords or OTP
+
+- [x] Add UI to login and register
+- [x] Handle API response errors and set cookies when signing up
+- [x] Add password patterns and regex
+- [x] Add UI to dashboard
+- [x] Add proper error handling and messages
+- [ ] Create a proper database schema
+- [ ] Research NextAuth
+- [ ] Add profile pictures
+- [ ] Try to convert pages to server components
+- [ ] Add one time passwords (OTP)
