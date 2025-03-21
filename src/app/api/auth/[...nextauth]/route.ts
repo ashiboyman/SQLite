@@ -5,6 +5,8 @@ import { db } from "@/server/db/index";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { NextAuthOptions } from "next-auth";
+import { ZodError } from "zod"
+import { signInSchema } from "@/lib/zod"
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -15,26 +17,69 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                if (!credentials?.email || !credentials?.password) {
-                    throw new Error("All fields are required.");
-                }
+                try {
+                    // Basic check to ensure values exist
+                    if (!credentials?.email || !credentials?.password) {
+                      throw new Error("All fields are required.");
+                    }
+          
+                    // Validate credentials using Zod
+                    const { email, password } = await signInSchema.parseAsync(
+                      credentials
+                    );
+          
+                    // Retrieve the user from your database
+                    const user = await db
+                      .select()
+                      .from(users)
+                      .where(eq(users.email, email))
+                      .get();
+          
+                    if (!user) {
+                      throw new Error("Username or password is not valid");
+                    }
+          
+                    // Compare passwords (assuming you are using bcrypt)
+                    const isValidPassword = await bcrypt.compare(password, user.password);
+                    if (!isValidPassword) {
+                      throw new Error("Username or password is not valid");
+                    }
+          
+                    // Return the user object if everything is valid
+                    return { id: String(user.id), email: user.email, name: user.name };
+                  } catch (error) {
+                    // If the error comes from Zod, format the errors
+                    if (error instanceof ZodError) {
+                      const formattedErrors = error.issues
+                        .map((issue) => issue.message)
+                        .join(", ");
+                      throw new Error(formattedErrors);
+                    }
+                    // For any other error, re-throw it
+                    throw error;
+                  }
+                // if (!credentials?.email || !credentials?.password) {
+                //     throw new Error("All fields are required.");
+                // }
+                // const { email, password } = await signInSchema.parseAsync(credentials)
 
-                const user = await db
-                    .select()
-                    .from(users)
-                    .where(eq(users.email, credentials.email))
-                    .get();
 
-                if (!user) {
-                    throw new Error("User not found.");
-                }
+                // const user = await db
+                //     .select()
+                //     .from(users)
+                //     .where(eq(users.email, credentials.email))
+                //     .get();
 
-                const isValidPassword = await bcrypt.compare(credentials.password, user.password);
-                if (!isValidPassword) {
-                    throw new Error("Invalid password.");
-                }
+                // if (!user) {
+                //     throw new Error("User Name or password is not valid");
+                // }
 
-                return { id: String(user.id), email: user.email, name: user.name };
+                // const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+                // if (!isValidPassword) {
+                //     throw new Error("User Name or password is not valid");
+                // }
+
+                // return { id: String(user.id), email: user.email, name: user.name };
             }
         }),
     ],

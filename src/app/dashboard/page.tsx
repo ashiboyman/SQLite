@@ -3,23 +3,41 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, Home, Settings, Bell, PieChart, Calendar, Mail, Menu, X } from "lucide-react";
+import {
+    LogOut,
+    User,
+    Home,
+    Settings,
+    Bell,
+    PieChart,
+    Calendar,
+    Mail,
+    Menu,
+    X,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { signOut } from "next-auth/react"
 
 export default function Dashboard() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    
+
     const navItems = [
         { icon: Home, label: "Home", active: true },
         { icon: PieChart, label: "Analytics" },
         { icon: Calendar, label: "Calendar" },
         { icon: Mail, label: "Messages" },
-        { icon: Settings, label: "Settings" }
+        { icon: Settings, label: "Settings" },
     ];
 
     // Simplified mobile navigation - only show 4 most important items
@@ -27,7 +45,7 @@ export default function Dashboard() {
         { icon: Home, label: "Home", active: true },
         { icon: PieChart, label: "Analytics" },
         { icon: Calendar, label: "Calendar" },
-        { icon: Menu, label: "More" }
+        { icon: Menu, label: "More" },
     ];
 
     useEffect(() => {
@@ -71,7 +89,9 @@ export default function Dashboard() {
                 {/* Desktop Sidebar */}
                 <div className="hidden md:flex flex-col w-64 bg-white/80 backdrop-blur-sm shadow-md p-4 min-h-screen">
                     <div className="px-4 py-6">
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Dashboard</h2>
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                            Dashboard
+                        </h2>
                     </div>
                     <nav className="space-y-1 flex-1">
                         {navItems.map((item) => (
@@ -79,7 +99,9 @@ export default function Dashboard() {
                                 key={item.label}
                                 variant={item.active ? "default" : "ghost"}
                                 className={`w-full justify-start ${
-                                    item.active ? "" : "text-gray-600 hover:text-gray-900"
+                                    item.active
+                                        ? ""
+                                        : "text-gray-600 hover:text-gray-900"
                                 }`}
                             >
                                 <item.icon className="mr-2 h-5 w-5" />
@@ -88,7 +110,11 @@ export default function Dashboard() {
                         ))}
                     </nav>
                     <div className="mt-auto">
-                        <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => router.push("/api/auth/signout")}>
+                        <Button
+                            variant="outline"
+                            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => signOut()}
+                        >
                             <LogOut className="mr-2 h-5 w-5" />
                             Sign Out
                         </Button>
@@ -100,20 +126,30 @@ export default function Dashboard() {
                     <header className="flex justify-between items-center mb-8">
                         <div className="flex items-center">
                             <Avatar className="h-12 w-12 mr-4 border-2 border-white shadow-sm">
-                                <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || ""} />
+                                <AvatarImage
+                                    src={session?.user?.image || ""}
+                                    alt={session?.user?.name || ""}
+                                />
                                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                                     {userInitials}
                                 </AvatarFallback>
                             </Avatar>
                             <div>
                                 <h1 className="text-2xl font-bold text-gray-800">
-                                    Welcome back, {session?.user?.name?.split(" ")[0]}!
+                                    Welcome back,{" "}
+                                    {session?.user?.name?.split(" ")[0]}!
                                 </h1>
-                                <p className="text-gray-600">{session?.user?.email}</p>
+                                <p className="text-gray-600">
+                                    {session?.user?.email}
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
-                            <Button variant="outline" size="icon" className="rounded-full">
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="rounded-full"
+                            >
                                 <Bell className="h-5 w-5" />
                             </Button>
                         </div>
@@ -122,37 +158,66 @@ export default function Dashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Card className="shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg">Activity Summary</CardTitle>
-                                <CardDescription>Your recent activity statistics</CardDescription>
+                                <CardTitle className="text-lg">
+                                    Activity Summary
+                                </CardTitle>
+                                <CardDescription>
+                                    Your recent activity statistics
+                                </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    {["Today", "This Week", "This Month"].map((period) => (
-                                        <div key={period} className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">{period}</span>
-                                            <div className="w-2/3 bg-gray-100 rounded-full h-2.5">
-                                                <div
-                                                    className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2.5 rounded-full"
-                                                    style={{ width: `${Math.floor(Math.random() * 100)}%` }}
-                                                ></div>
+                                    {["Today", "This Week", "This Month"].map(
+                                        (period) => (
+                                            <div
+                                                key={period}
+                                                className="flex justify-between items-center"
+                                            >
+                                                <span className="text-sm text-gray-600">
+                                                    {period}
+                                                </span>
+                                                <div className="w-2/3 bg-gray-100 rounded-full h-2.5">
+                                                    <div
+                                                        className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2.5 rounded-full"
+                                                        style={{
+                                                            width: `${Math.floor(
+                                                                Math.random() *
+                                                                    100
+                                                            )}%`,
+                                                        }}
+                                                    ></div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        )
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card className="shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg">Recent Tasks</CardTitle>
-                                <CardDescription>Your upcoming deadlines</CardDescription>
+                                <CardTitle className="text-lg">
+                                    Recent Tasks
+                                </CardTitle>
+                                <CardDescription>
+                                    Your upcoming deadlines
+                                </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <ul className="space-y-3">
-                                    {["Complete project plan", "Review pull requests", "Team meeting"].map((task) => (
-                                        <li key={task} className="flex items-center">
+                                    {[
+                                        "Complete project plan",
+                                        "Review pull requests",
+                                        "Team meeting",
+                                    ].map((task) => (
+                                        <li
+                                            key={task}
+                                            className="flex items-center"
+                                        >
                                             <div className="w-4 h-4 border border-gray-300 rounded-sm mr-3"></div>
-                                            <span className="text-sm">{task}</span>
+                                            <span className="text-sm">
+                                                {task}
+                                            </span>
                                         </li>
                                     ))}
                                 </ul>
@@ -161,13 +226,27 @@ export default function Dashboard() {
 
                         <Card className="shadow-md hover:shadow-lg transition-shadow">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg">Quick Actions</CardTitle>
-                                <CardDescription>Common actions you might need</CardDescription>
+                                <CardTitle className="text-lg">
+                                    Quick Actions
+                                </CardTitle>
+                                <CardDescription>
+                                    Common actions you might need
+                                </CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-2">
-                                    {["New Project", "Add Task", "Schedule Meeting", "Send Message"].map((action) => (
-                                        <Button key={action} variant="outline" size="sm" className="justify-start">
+                                    {[
+                                        "New Project",
+                                        "Add Task",
+                                        "Schedule Meeting",
+                                        "Send Message",
+                                    ].map((action) => (
+                                        <Button
+                                            key={action}
+                                            variant="outline"
+                                            size="sm"
+                                            className="justify-start"
+                                        >
                                             {action}
                                         </Button>
                                     ))}
@@ -194,7 +273,7 @@ export default function Dashboard() {
                             <span className="text-xs">{item.label}</span>
                         </Button>
                     ))}
-                    
+
                     {/* "More" button with slide-out menu */}
                     <Sheet>
                         <SheetTrigger asChild>
@@ -207,7 +286,10 @@ export default function Dashboard() {
                                 <span className="text-xs">More</span>
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="bottom" className="h-auto max-h-64 pb-8 pt-6 rounded-t-xl">
+                        <SheetContent
+                            side="bottom"
+                            className="h-auto max-h-64 pb-8 pt-6 rounded-t-xl"
+                        >
                             <div className="space-y-2">
                                 {/* Additional menu items */}
                                 <Button
@@ -227,7 +309,9 @@ export default function Dashboard() {
                                 <Button
                                     variant="outline"
                                     className="w-full justify-start text-red-600 mt-4"
-                                    onClick={() => router.push("/api/auth/signout")}
+                                    onClick={() =>
+                                        signOut()
+                                    }
                                 >
                                     <LogOut className="mr-2 h-5 w-5" />
                                     Sign Out
