@@ -5,6 +5,7 @@
 - [x] Add password patterns and regex
 - [x] Add UI to dashboard
 - [x] Add proper error handling and messages
+- [x] Add home page
 - [ ] Create a proper database schema
 - [ ] Research NextAuth
 - [ ] Add profile pictures
