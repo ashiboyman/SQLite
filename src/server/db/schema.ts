@@ -34,3 +34,12 @@ export const users = sqliteTable("users",{
   updatedAt: text("updated_at").default(sql`CURRENT_TIME`),
   name: text("name"),
 })
+export const pendingUsers = sqliteTable("pending_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").unique().notNull(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  verificationCode: text("verification_code").notNull(),
+  expiresAt: text("expires_at").notNull(), // Store expiration time
+  createdAt: text("created_at").default(sql`CURRENT_TIME`),
+});

@@ -41,24 +41,30 @@ export default function SignupPage() {
 
         if (res?.success) {
             setIsSuccess(true);
-
+            if (res.success && res.email) {
+                // Redirect to verification page with email parameter
+                router.push(`/verify?email=${encodeURIComponent(res.email)}`);
+              } else if (res.error) {
+                // Handle error
+                setError("Invalid email or password");
+              }
             // Automatically sign in the user using the same credentials
-            const email = formData.get("email") as string;
-            const password = formData.get("password") as string;
+            // const email = formData.get("email") as string;
+            // const password = formData.get("password") as string;
 
-            const signInResponse = await signIn("credentials", {
-                redirect: false,
-                email,
-                password,
-            });
+            // const signInResponse = await signIn("credentials", {
+            //     redirect: false,
+            //     email,
+            //     password,
+            // });
 
-            if (signInResponse?.error) {
-                setError(signInResponse.error);
-                setIsSuccess(false);
-            } else {
-                // Redirect to dashboard or any protected route after successful sign in
-                router.push("/dashboard");
-            }
+            // if (signInResponse?.error) {
+            //     setError(signInResponse.error);
+            //     setIsSuccess(false);
+            // } else {
+            //     // Redirect to dashboard or any protected route after successful sign in
+            //     router.push("/dashboard");
+            // }
         }
     };
 

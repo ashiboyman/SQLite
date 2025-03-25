@@ -1,9 +1,14 @@
 "use server";
 
-import { users } from "@/server/db/schema";
+import { pendingUsers, users } from "@/server/db/schema";
 import { db } from "@/server/db/index";
 import bcrypt from "bcrypt";
 import { z } from "zod";
+import { Resend } from "resend";
+import { PlaidVerifyIdentityEmail } from "@/components/Email/email-template";
+import { eq } from "drizzle-orm";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Define the signup schema with Zod
 const signupSchema = z.object({
@@ -23,6 +28,11 @@ const signupSchema = z.object({
     .min(1, "Name is required")
 });
 
+// Function to generate a 6-digit verification code
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 export async function signup(formData: FormData) {
   // Retrieve fields from the form data
   const email = formData.get("email") as string;
@@ -34,7 +44,6 @@ export async function signup(formData: FormData) {
     signupSchema.parse({ email, password, name });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      // Join all error messages into a single string
       const validationErrors = error.errors
         .map((err) => err.message)
         .join(", ");
@@ -43,15 +52,56 @@ export async function signup(formData: FormData) {
     return { error: "Validation failed" };
   }
 
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
-
   try {
-    // Insert the new user into the database
-    await db.insert(users).values({ email, password: hashedPassword, name });
-    return { success: "User registered successfully!" };
+    // Check if email already exists in users table
+    const existingUser = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.email, email)
+    });
+    
+    if (existingUser) {
+      return { error: "Email already registered" };
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Generate verification code
+    const verificationCode = generateVerificationCode();
+    
+    // Set expiration time (1 hour from now)
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+
+    // Delete any existing pending registration for this email
+    await db.delete(pendingUsers).where(eq(pendingUsers.email, email));
+    
+    // Store pending user with verification code
+    await db.insert(pendingUsers).values({ 
+      email, 
+      password: hashedPassword, 
+      name,
+      verificationCode,
+      expiresAt
+    });
+    
+    // Send verification email
+    const { data, error } = await resend.emails.send({
+      from: "Your App <onboarding@resend.dev>", // Update with your sender
+      to: [email],
+      subject: "Verify Your Email Address",
+      react: PlaidVerifyIdentityEmail({ validationCode: verificationCode }),
+    });
+
+    if (error) {
+      console.error("Failed to send email:", error);
+      return { error: "Failed to send verification email. Please try again." };
+    }
+
+    return { 
+      success: "Verification email sent! Please check your inbox.",
+      email // Return email to redirect to verification page
+    };
   } catch (error) {
     console.error(error);
-    return { error: "User already exists or database error." };
+    return { error: "An error occurred during registration." };
   }
 }

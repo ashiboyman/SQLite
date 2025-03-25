@@ -6,8 +6,9 @@
 - [x] Add UI to dashboard
 - [x] Add proper error handling and messages
 - [x] Add home page
+- [x] Add one time passwords (OTP) 
+- [x] test OTP
 - [ ] Create a proper database schema
 - [ ] Research NextAuth
 - [ ] Add profile pictures
 - [ ] Try to convert pages to server components
-- [ ] Add one time passwords (OTP)
