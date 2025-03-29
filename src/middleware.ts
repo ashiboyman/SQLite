@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest) {
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     console.log(token);
-    console.log(req.nextUrl.pathname);
+    // console.log(req.nextUrl.pathname);
 
     // Prevent infinite loop
     if (!token && (req.nextUrl.pathname !== "/login" && req.nextUrl.pathname !== "/signup"&& req.nextUrl.pathname !== "/verify")) {
