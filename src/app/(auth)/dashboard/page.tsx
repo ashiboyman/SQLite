@@ -7,9 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
+import ExpenseCart from "./expens_cart";
 export default function DashboardPage() {
   return (
+    <>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <Card className="shadow-md hover:shadow-lg transition-shadow">
         <CardHeader className="pb-2">
@@ -85,5 +86,7 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
     </div>
+    <ExpenseCart />
+    </>
   );
 }

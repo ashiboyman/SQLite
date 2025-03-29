@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { verifyEmail } from "@/server/verifAction";
+import { verifyEmail } from "@/server/actions/verifAction";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Card,

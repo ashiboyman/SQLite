@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signup } from "@/server/actions";
+import { signup } from "@/server/actions/actions";
 import {
     Card,
     CardContent,

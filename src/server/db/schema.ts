@@ -27,8 +27,8 @@ export const users = sqliteTable("users",{
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").unique(),
   password: text("password").notNull(),
-  createdAt: text("created_at").default(sql`CURRENT_TIME`),
-  updatedAt: text("updated_at").default(sql`CURRENT_TIME`),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
   name: text("name"),
 })
 export const pendingUsers = sqliteTable("pending_users", {
@@ -38,7 +38,7 @@ export const pendingUsers = sqliteTable("pending_users", {
   name: text("name").notNull(),
   verificationCode: text("verification_code").notNull(),
   expiresAt: text("expires_at").notNull(), // Store expiration time
-  createdAt: text("created_at").default(sql`CURRENT_TIME`),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 });
 // Updated table for expenses. Each expense is linked to a user.
 export const expenses = sqliteTable("expenses", {
@@ -59,6 +59,6 @@ export const expenses = sqliteTable("expenses", {
     as opposed to the metadata about the record's creation.
   */
   expenseDate: text("expense_date"),
-  createdAt: text("created_at").default(sql`CURRENT_TIME`),
-  updatedAt: text("updated_at").default(sql`CURRENT_TIME`),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });

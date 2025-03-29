@@ -1,6 +1,6 @@
 "use server";
 
-import { pendingUsers, users } from "@/server/db/schema";
+import { pendingUsers, expenses } from "@/server/db/schema";
 import { db } from "@/server/db/index";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -103,5 +103,28 @@ export async function signup(formData: FormData) {
   } catch (error) {
     console.error(error);
     return { error: "An error occurred during registration." };
+  }
+}
+
+
+export async function createExpenseAction(data: {
+  userId: number;
+  amount: number;
+  description: string;
+  expenseDate?: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Insert a new expense record. If expenseDate is not provided, default to current time.
+    await db.insert(expenses).values({
+      userId: data.userId,
+      amount: data.amount,
+      description: data.description,
+      expenseDate: data.expenseDate || new Date().toISOString(),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating expense:", error);
+    return { success: false, error: "Failed to create expense." };
   }
 }
