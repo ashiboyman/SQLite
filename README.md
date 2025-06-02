@@ -8,6 +8,7 @@
 - [x] Add home page
 - [x] Add one time passwords (OTP) 
 - [x] test OTP
+- [ ] migrate to auth js version 5
 - [ ] Create a proper database schema
 - [ ] Research NextAuth
 - [ ] Add profile pictures
