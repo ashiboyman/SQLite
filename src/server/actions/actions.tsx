@@ -1,6 +1,6 @@
 "use server";
 
-import { pendingUsers, expenses } from "@/server/db/schema";
+import { pendingUsers, expenses, users } from "@/server/db/schema";
 import { db } from "@/server/db/index";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -28,9 +28,13 @@ const signupSchema = z.object({
     .min(1, "Name is required")
 });
 
-// Function to generate a 6-digit verification code
+// Function to generate a 6-digit verification code using cryptographically secure random numbers
 function generateVerificationCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // Use the Web Crypto API which is available in modern Node.js and browsers
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  // Ensure a 6-digit code by constraining the random value
+  return ((array[0] % 900000) + 100000).toString();
 }
 
 export async function signup(formData: FormData) {
@@ -55,7 +59,7 @@ export async function signup(formData: FormData) {
   try {
     // Check if email already exists in users table
     const existingUser = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.email, email)
+      where: eq(users.email, email),
     });
     
     if (existingUser) {

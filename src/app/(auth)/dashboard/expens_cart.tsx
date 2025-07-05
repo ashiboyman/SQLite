@@ -5,14 +5,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { QUERIES } from "@/server/db/queries";
-import { getToken } from "next-auth/jwt";
-import type { NextRequest } from "next/server";
-import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next"; // NextAuth v4 server helper
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"; // Your NextAuth config
-import { CalendarIcon, DollarSign, FileText } from "lucide-react";
+import { DollarSign, FileText } from "lucide-react";
 
 export default async function ExpenseCart() {
     const session = await getServerSession(authOptions);
