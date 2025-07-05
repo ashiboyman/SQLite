@@ -1,6 +1,6 @@
 "use server";
 
-import { pendingUsers, expenses } from "@/server/db/schema";
+import { pendingUsers, expenses, users } from "@/server/db/schema";
 import { db } from "@/server/db/index";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -59,7 +59,7 @@ export async function signup(formData: FormData) {
   try {
     // Check if email already exists in users table
     const existingUser = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.email, email)
+      where: eq(users.email, email),
     });
     
     if (existingUser) {
