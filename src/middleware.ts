@@ -31,5 +31,13 @@ export async function middleware(req: NextRequest) {
 
 // Ensure middleware runs only for these routes
 export const config = {
-    matcher: ["/dashboard/:path*", "/profile/:path*", "/settings/:path*","/login:path*","/signup:path*","/verify:path*"], // Adjust as needed
+    // Ensure matcher patterns are syntactically correct so middleware executes as expected
+    matcher: [
+        "/dashboard/:path*",
+        "/profile/:path*",
+        "/settings/:path*",
+        "/login/:path*",
+        "/signup/:path*",
+        "/verify/:path*",
+    ],
 };

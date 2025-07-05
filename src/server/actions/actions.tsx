@@ -28,9 +28,13 @@ const signupSchema = z.object({
     .min(1, "Name is required")
 });
 
-// Function to generate a 6-digit verification code
+// Function to generate a 6-digit verification code using cryptographically secure random numbers
 function generateVerificationCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  // Use the Web Crypto API which is available in modern Node.js and browsers
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  // Ensure a 6-digit code by constraining the random value
+  return ((array[0] % 900000) + 100000).toString();
 }
 
 export async function signup(formData: FormData) {
