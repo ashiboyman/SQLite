@@ -87,8 +87,10 @@ export const authOptions: NextAuthOptions = {
         async session({ session, token }) {
             // Ensure the user ID from JWT is correctly attached to the session
             if (session.user) {
-                // Use a narrowed type assertion to avoid `any`
-                session.user.id = (token as { id?: string }).id ?? token.sub ?? undefined;
+                const idFromToken = (token as { id?: string }).id ?? token.sub;
+                if (idFromToken) {
+                    session.user.id = idFromToken;
+                }
             }
             return session;
         },
